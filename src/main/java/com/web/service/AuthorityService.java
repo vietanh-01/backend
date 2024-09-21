@@ -1,4 +1,4 @@
-package com.web.servive;
+package com.web.service;
 
 import com.web.entity.Authority;
 import org.springframework.stereotype.Service;

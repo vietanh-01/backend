@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "category")
@@ -16,6 +17,7 @@ public class Category {
     @Column(name = "id")
     private Long id;
 
+    @NotNull(message = "Tên danh mục không được để trống")
     private String name;
 
     private Boolean deleted;

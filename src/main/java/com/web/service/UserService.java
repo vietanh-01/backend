@@ -1,4 +1,4 @@
-package com.web.servive;
+package com.web.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.web.dto.request.TokenDto;

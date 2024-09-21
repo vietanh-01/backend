@@ -2,7 +2,7 @@ package com.web.serviceImp;
 
 import com.web.entity.Authority;
 import com.web.repository.AuthorityRepository;
-import com.web.servive.AuthorityService;
+import com.web.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

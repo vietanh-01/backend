@@ -12,7 +12,7 @@ import com.web.jwt.JwtTokenProvider;
 import com.web.mapper.UserMapper;
 import com.web.repository.AuthorityRepository;
 import com.web.repository.UserRepository;
-import com.web.servive.UserService;
+import com.web.service.UserService;
 import com.web.utils.CommonPage;
 import com.web.utils.Contains;
 import com.web.utils.MailService;
