@@ -27,7 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @CrossOrigin
 public class UserApi {
 
@@ -70,7 +70,7 @@ public class UserApi {
     }
 
     /*token device get from firebase*/
-    @PostMapping("/login")
+    @PostMapping("/login/email")
     public TokenDto authenticate(@RequestBody LoginDto loginDto) throws Exception {
         TokenDto tokenDto = userService.login(loginDto.getUsername(), loginDto.getPassword(), loginDto.getTokenFcm());
         return tokenDto;

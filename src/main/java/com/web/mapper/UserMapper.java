@@ -2,6 +2,7 @@ package com.web.mapper;
 
 import com.web.dto.request.UserRequest;
 import com.web.dto.response.UserDto;
+import com.web.dto.response.UserResponse;
 import com.web.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class UserMapper {
         List<UserDto> dto = list.stream().map(post -> mapper.map(post, UserDto.class))
                 .collect(Collectors.toList());
         return dto;
+    }
+
+    public UserResponse userToResponse(User u){
+        UserResponse response = mapper.map(u, UserResponse.class);
+        return response;
     }
 
 }

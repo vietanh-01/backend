@@ -1,13 +1,19 @@
 package com.web.service;
 
 import com.web.entity.Authority;
-import org.springframework.stereotype.Service;
+import com.web.repository.AuthorityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
-public interface AuthorityService {
+@Component
+public class AuthorityService {
 
-    public List<Authority> findAll();
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
+    public List<Authority> findAll() {
+        return authorityRepository.findAll();
+    }
 }
