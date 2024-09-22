@@ -1,5 +1,6 @@
 package com.web.mapper;
 
+import com.web.dto.request.BlogRequest;
 import com.web.dto.response.BlogResponse;
 import com.web.dto.response.UserDto;
 import com.web.dto.response.UserResponse;
@@ -25,4 +26,10 @@ public class BlogMapper {
         }
         return response;
     }
+
+    public Blog requestToBlog(BlogRequest request){
+        Blog blog = mapper.map(request, Blog.class);
+        return blog;
+    }
+
 }

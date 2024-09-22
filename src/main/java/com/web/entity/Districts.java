@@ -12,10 +12,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @Table(name = "districts")
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {
+        "districts"
+})
 public class Districts {
 
     @Id
@@ -28,5 +32,10 @@ public class Districts {
     @ManyToOne
     @JoinColumn(name = "province_id")
     private Province province;
-}
 
+    @OneToMany(mappedBy = "districts")
+    @JsonIgnoreProperties(value = {
+            "districts"
+    })
+    private List<Wards> wards = new ArrayList<>();
+}

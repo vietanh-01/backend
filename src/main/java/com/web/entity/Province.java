@@ -18,6 +18,7 @@ import java.util.List;
 @Table(name = "province")
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"province"})
 public class Province {
 
     @Id
@@ -26,4 +27,9 @@ public class Province {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "province")
+    @JsonIgnoreProperties(value = {"province"})
+    private List<Districts> districts = new ArrayList<>();
 }
+

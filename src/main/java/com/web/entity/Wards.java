@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Table(name = "wards")
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"wards"})
 public class Wards {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,6 @@ public class Wards {
 
     @ManyToOne
     @JoinColumn(name = "districts_id")
+    @JsonIgnoreProperties(value = {"wards"})
     private Districts districts;
 }
-

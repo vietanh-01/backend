@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.dto.request.BlogRequest;
 import com.web.dto.response.BlogResponse;
 import com.web.entity.Blog;
 import com.web.exception.MessageException;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +29,18 @@ public class BlogService {
     @Autowired
     private BlogMapper blogMapper;
 
-    public BlogResponse saveOrUpdate(Blog blog) {
+    public BlogResponse saveOrUpdate(BlogRequest blogRequest) {
+        Blog blog = blogMapper.requestToBlog(blogRequest);
         blog.setUser(userUtils.getUserWithAuthority());
         blog.setCreatedDate(new Date(System.currentTimeMillis()));
+        blog.setCreatedTime(new Time(System.currentTimeMillis()));
+        if(blog.getId() == null){
+            blog.setNumView(0);
+        }
+        else{
+            Blog ex = blogRepository.findById(blogRequest.getId()).get();
+            blog.setNumView(ex.getNumView());
+        }
         Blog result = blogRepository.save(blog);
         return blogMapper.blogToResponse(result);
     }
@@ -54,6 +65,8 @@ public class BlogService {
         if (blog.isEmpty()){
             throw new MessageException("Blog not found");
         }
+        blog.get().setNumView(blog.get().getNumView() + 1);
+        blogRepository.save(blog.get());
         return blogMapper.blogToResponse(blog.get());
     }
 }

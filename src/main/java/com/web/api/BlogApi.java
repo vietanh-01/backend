@@ -1,4 +1,5 @@
 package com.web.api;
+import com.web.dto.request.BlogRequest;
 import com.web.dto.response.BlogResponse;
 import com.web.entity.Blog;
 import com.web.entity.Category;
@@ -23,8 +24,8 @@ public class BlogApi {
     private BlogService blogService;
 
     @PostMapping("/admin/create-update")
-    public ResponseEntity<?> save(@RequestBody Blog blog){
-        BlogResponse result = blogService.saveOrUpdate(blog);
+    public ResponseEntity<?> save(@RequestBody BlogRequest blogRequest){
+        BlogResponse result = blogService.saveOrUpdate(blogRequest);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
