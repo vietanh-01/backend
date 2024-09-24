@@ -72,4 +72,8 @@ public class RealEstate {
     @OneToMany(mappedBy = "realEstate", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<RealEstateImage> realEstateImages;
+
+    @OneToMany(mappedBy = "realEstate", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<RealEstateCategory> realEstateCategories;
 }

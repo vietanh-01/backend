@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Setter
 @JsonIgnoreProperties(value = {"wards"})
 public class Wards {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
