@@ -17,13 +17,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**").allowedOrigins("http://localhost:3000")
         registry.addMapping("/**").allowedOrigins("*")
                 .allowCredentials(false)
+//                .allowCredentials(true)
                 .allowedOriginPatterns("http://*","https://*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .maxAge(1800).exposedHeaders("Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params");
-
+                .maxAge(1800);
     }
 
     @Override

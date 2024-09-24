@@ -2,6 +2,8 @@ package com.web.service;
 
 import com.web.dto.request.RealEstateRequest;
 import com.web.dto.response.RealEstateResponse;
+import com.web.elasticsearch.model.RealEstateSearch;
+import com.web.elasticsearch.repository.RealEstateSearchRepository;
 import com.web.entity.*;
 import com.web.enums.Status;
 import com.web.exception.MessageException;
@@ -12,6 +14,9 @@ import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
 import java.sql.Date;
@@ -51,6 +56,9 @@ public class RealEstateService {
 
     @Autowired
     private RealEstateMapper realEstateMapper;
+
+    @Autowired
+    private RealEstateSearchRepository realEstateSearchRepository;
 
     @Value("${paycost}")
     private Double payCost;
@@ -128,7 +136,30 @@ public class RealEstateService {
             deductionHistory.setRealEstateTitle(result.getTitle());
             deductionHistoryRepository.save(deductionHistory);
         }
-        return realEstateMapper.entityToResponse(result);
+        RealEstateResponse response = realEstateMapper.entityToResponse(result);
+        RealEstateSearch realEstateSearch = realEstateMapper.responseToSearch(response);
+        realEstateSearchRepository.save(realEstateSearch);
+        return response;
     }
 
+    public List<RealEstate> myRealEstate(Status status){
+        List<RealEstate> list = null;
+        User user = userUtils.getUserWithAuthority();
+        if(status == null){
+            list = realEstateRepository.findByUser(user.getId());
+        }
+        else{
+            list = realEstateRepository.findByUserAndStatus(user.getId(), status);
+        }
+        return list;
+    }
+
+    public void deleteByUser(Long id){
+        RealEstate realEstate = realEstateRepository.findById(id).get();
+        if(userUtils.getUserWithAuthority().getId() != realEstate.getUser().getId()){
+            throw new MessageException("Bạn không đủ quyền");
+        }
+        realEstateRepository.delete(realEstate);
+        realEstateSearchRepository.deleteById(id);
+    }
 }
