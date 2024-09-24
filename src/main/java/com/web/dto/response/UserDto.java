@@ -26,12 +26,6 @@ public class UserDto {
 
     private String phone;
 
-    private Boolean actived;
-
-    private Date createdDate;
-
-    private String tokenFcm;
-
     private Authority authorities;
 }
 

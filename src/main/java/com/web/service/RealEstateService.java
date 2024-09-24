@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.dto.request.RealEstateRequest;
+import com.web.dto.response.RealEstateResponse;
 import com.web.entity.*;
 import com.web.enums.Status;
 import com.web.exception.MessageException;
@@ -43,6 +44,9 @@ public class RealEstateService {
     private JuridicalRepository juridicalRepository;
 
     @Autowired
+    private WardsRepository wardsRepository;
+
+    @Autowired
     private UserUtils userUtils;
 
     @Autowired
@@ -51,7 +55,7 @@ public class RealEstateService {
     @Value("${paycost}")
     private Double payCost;
 
-    public RealEstate saveOrUpdate(RealEstateRequest request){
+    public RealEstateResponse saveOrUpdate(RealEstateRequest request){
         User user = userUtils.getUserWithAuthority();
         if(request.getId() == null){
             if(user.getAmount() == null){
@@ -62,6 +66,11 @@ public class RealEstateService {
             }
         }
         RealEstate realEstate = realEstateMapper.requestToEntity(request);
+        Juridical juridical = juridicalRepository.findById(request.getJuridical().getId()).get();
+        Wards wards = wardsRepository.findById(request.getWards().getId()).get();
+
+        realEstate.setJuridical(juridical);
+        realEstate.setWards(wards);
         if(realEstate.getId() != null){
             RealEstate re = realEstateRepository.findById(realEstate.getId()).get();
             if(re.getUser().getId() != user.getId() && !user.getAuthorities().getName().equals(Contains.ROLE_ADMIN)){
@@ -119,7 +128,7 @@ public class RealEstateService {
             deductionHistory.setRealEstateTitle(result.getTitle());
             deductionHistoryRepository.save(deductionHistory);
         }
-        return result;
+        return realEstateMapper.entityToResponse(result);
     }
 
 }

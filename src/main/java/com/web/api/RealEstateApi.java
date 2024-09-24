@@ -3,6 +3,7 @@ package com.web.api;
 import com.web.dto.request.BlogRequest;
 import com.web.dto.request.RealEstateRequest;
 import com.web.dto.response.BlogResponse;
+import com.web.dto.response.RealEstateResponse;
 import com.web.entity.RealEstate;
 import com.web.service.BlogService;
 import com.web.service.RealEstateService;
@@ -21,7 +22,7 @@ public class RealEstateApi {
 
     @PostMapping("/all/create-update")
     public ResponseEntity<?> save(@RequestBody RealEstateRequest request){
-        RealEstate result = realEstateService.saveOrUpdate(request);
+        RealEstateResponse result = realEstateService.saveOrUpdate(request);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
