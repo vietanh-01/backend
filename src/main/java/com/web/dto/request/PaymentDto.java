@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 public class PaymentDto {
-//    private Long amount;
-    private String codeVoucher;
+    private Long amount;
     private String content;
     private String returnUrl;
     private String notifyUrl;
+
 }
 

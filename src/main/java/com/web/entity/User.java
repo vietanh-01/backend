@@ -45,6 +45,8 @@ public class User{
 
     private UserType userType;
 
+    private Double amount;
+
     @ManyToOne
     @JoinColumn(name = "authority_name")
     private Authority authorities;
