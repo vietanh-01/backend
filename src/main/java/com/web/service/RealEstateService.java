@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.dto.request.RealEstateRequest;
+import com.web.dto.response.RealEstateProvinceDto;
 import com.web.dto.response.RealEstateResponse;
 import com.web.elasticsearch.model.RealEstateSearch;
 import com.web.elasticsearch.repository.RealEstateSearchRepository;
@@ -16,9 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -161,5 +164,52 @@ public class RealEstateService {
         }
         realEstateRepository.delete(realEstate);
         realEstateSearchRepository.deleteById(id);
+    }
+
+    public void updateStatus(Status status,Long id){
+        RealEstate realEstate = realEstateRepository.findById(id).get();
+        realEstate.setStatus(status);
+        realEstateRepository.save(realEstate);
+        RealEstateResponse realEstateResponse = realEstateMapper.entityToResponse(realEstate);
+        RealEstateSearch realEstateSearch = realEstateMapper.responseToSearch(realEstateResponse);
+        realEstateSearchRepository.save(realEstateSearch);
+    }
+
+    // đếm số lượng bài đăng hôm nay
+    public Long countToday(){
+        Long count = realEstateRepository.soBaiDanghomNay(new Date(System.currentTimeMillis()));
+        return count;
+    }
+
+    public Long totalPost(){
+        Long total = realEstateRepository.count();
+        return total;
+    }
+
+    // số lượng bds trong các tỉnh
+    public List<RealEstateProvinceDto> numPostProvince(){
+        List<RealEstateProvinceDto> list = new ArrayList<>();
+        List<Object[]> objs = realEstateRepository.soLuongBdsCacTinh();
+        for(Object[] o : objs){
+            RealEstateProvinceDto re = new RealEstateProvinceDto();
+            re.setTenTinh((String) o[0]);
+            re.setSoLuongBds((BigInteger) o[1]);
+            list.add(re);
+        }
+        return list;
+    }
+
+    public void accuracy(@RequestParam("id") Long id){
+        RealEstate realEstate = realEstateRepository.findById(id).get();
+        if(realEstate.getAccuracy() == false){
+            realEstate.setAccuracy(true);
+        }
+        else{
+            realEstate.setAccuracy(false);
+        }
+        realEstateRepository.save(realEstate);
+        RealEstateResponse realEstateResponse = realEstateMapper.entityToResponse(realEstate);
+        RealEstateSearch realEstateSearch = realEstateMapper.responseToSearch(realEstateResponse);
+        realEstateSearchRepository.save(realEstateSearch);
     }
 }
