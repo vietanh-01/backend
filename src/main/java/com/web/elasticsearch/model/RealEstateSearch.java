@@ -1,4 +1,5 @@
 package com.web.elasticsearch.model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.dto.response.UserDto;
 import com.web.dto.response.WardDto;
 import com.web.entity.Juridical;
@@ -7,6 +8,7 @@ import com.web.entity.RealEstateImage;
 import com.web.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -30,7 +32,10 @@ public class RealEstateSearch {
 
     private String description;
 
-    private Date createdDate;
+//    @Field(type = FieldType.Date, format = DateFormat.basic_date_time)
+
+    @Field(type = FieldType.Date)
+    private java.util.Date createdDate;
 
     private Time createdTime;
 
@@ -69,4 +74,5 @@ public class RealEstateSearch {
     private List<RealEstateImage> realEstateImages = new ArrayList<>();
 
     private List<RealEstateCategory> realEstateCategories = new ArrayList<>();
+
 }

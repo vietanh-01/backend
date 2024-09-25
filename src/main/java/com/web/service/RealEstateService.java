@@ -12,8 +12,18 @@ import com.web.mapper.RealEstateMapper;
 import com.web.repository.*;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +36,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RealEstateService {
@@ -62,6 +73,9 @@ public class RealEstateService {
 
     @Autowired
     private RealEstateSearchRepository realEstateSearchRepository;
+
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Value("${paycost}")
     private Double payCost;
@@ -211,5 +225,51 @@ public class RealEstateService {
         RealEstateResponse realEstateResponse = realEstateMapper.entityToResponse(realEstate);
         RealEstateSearch realEstateSearch = realEstateMapper.responseToSearch(realEstateResponse);
         realEstateSearchRepository.save(realEstateSearch);
+    }
+
+    public Page<RealEstateSearch> searchFullElasticsearch(Pageable pageable,List<Long> categoryIds, Double minPrice, Double maxPrice,
+                                                          Float minAcreage, Float maxAcreage, Long provinceId, List<Long> districtsId) {
+
+        if(minPrice == null || maxPrice == null){
+            minPrice = 0D;
+            maxPrice = 1000000000000D;
+        }
+        if(minAcreage == null || maxAcreage == null){
+            minAcreage = 0F;
+            maxAcreage = 100000F;
+        }
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
+                .must(QueryBuilders.rangeQuery("price").gte(minPrice).lte(maxPrice));
+        boolQuery.must(QueryBuilders.rangeQuery("acreage").gte(minAcreage).lte(maxAcreage));
+
+        if(categoryIds.size() > 0){
+            BoolQueryBuilder blcategory = QueryBuilders.boolQuery();
+            categoryIds.forEach(p->{
+                blcategory.should(QueryBuilders.termQuery("realEstateCategories.category.id", p));
+            });
+            boolQuery.must(blcategory);
+        }
+
+        if(provinceId != null){
+            boolQuery.must(QueryBuilders.termQuery("ward.district.province.id",provinceId));
+            if(districtsId.size() > 0){
+                BoolQueryBuilder blcategory = QueryBuilders.boolQuery();
+                districtsId.forEach(d->{
+                    blcategory.should(QueryBuilders.termQuery("ward.district.id", d));
+                });
+                boolQuery.must(blcategory);
+            }
+        }
+
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQuery)
+                .withPageable(pageable)
+                .build();
+
+        SearchHits<RealEstateSearch> results = elasticsearchRestTemplate.search(nativeSearchQuery, RealEstateSearch.class, IndexCoordinates.of("real_estate"));
+        List<RealEstateSearch> realEstateSearches = results.getSearchHits().stream()
+                .map(hit -> hit.getContent())
+                .collect(Collectors.toList());
+        return new PageImpl<>(realEstateSearches, pageable, results.getTotalHits());
     }
 }

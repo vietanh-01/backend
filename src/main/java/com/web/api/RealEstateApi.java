@@ -1,15 +1,16 @@
 package com.web.api;
 
-import com.web.dto.request.BlogRequest;
 import com.web.dto.request.RealEstateRequest;
-import com.web.dto.response.BlogResponse;
+import com.web.dto.request.RealEstateRequestSearch;
 import com.web.dto.response.RealEstateProvinceDto;
 import com.web.dto.response.RealEstateResponse;
+import com.web.elasticsearch.model.RealEstateSearch;
 import com.web.entity.RealEstate;
 import com.web.enums.Status;
-import com.web.service.BlogService;
 import com.web.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,5 +72,14 @@ public class RealEstateApi {
         realEstateService.accuracy(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/public/search-full-accuracy")
+    public ResponseEntity<?> searchFullAccuracy(@RequestBody RealEstateRequestSearch search, Pageable pageable){
+        Page<RealEstateSearch> result = realEstateService.searchFullElasticsearch(pageable, search.getCategoryIds(),
+                search.getMinPrice(), search.getMaxPrice(), search.getMinAcreage(), search.getMaxAcreage(), search.getProvinceId(), search.getDistrictsId());
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
 
 }

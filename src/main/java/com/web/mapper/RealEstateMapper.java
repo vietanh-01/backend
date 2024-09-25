@@ -12,6 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 @Component
 public class RealEstateMapper {
 
@@ -34,6 +37,7 @@ public class RealEstateMapper {
 
     public RealEstateSearch responseToSearch(RealEstateResponse realEstateResponse){
         RealEstateSearch search = mapper.map(realEstateResponse, RealEstateSearch.class);
+        search.setCreatedDate(new Date(realEstateResponse.getCreatedDate().getTime()));
         for(RealEstateImage r : search.getRealEstateImages()){
             r.setRealEstate(null);
         }
