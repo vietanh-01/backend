@@ -28,12 +28,15 @@ public class DeductionHistoryService {
         return deductionHistoryRepository.findByUser(user.getId());
     }
 
-    public Page<DeductionHistory> findAll(Date from, Date to, Pageable pageable){
+    public Page<DeductionHistory> findAll(Date from, Date to, Pageable pageable,String search){
         if(from == null || to == null){
             from = Date.valueOf("2000-01-01");
             to = Date.valueOf("2100-01-01");
         }
-        return deductionHistoryRepository.findByDate(from, to, pageable);
+        if(search == null){
+            search = "";
+        }
+        return deductionHistoryRepository.findByDate(from, to,"%"+search+"%", pageable);
     }
 
     public List<DeductionHistory> findByUserId(Long userId){

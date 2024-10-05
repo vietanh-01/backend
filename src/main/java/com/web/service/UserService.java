@@ -109,6 +109,7 @@ public class UserService {
         user.setCreatedDate(new Date(System.currentTimeMillis()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActived(true);
+        user.setUsername(user.getEmail());
         Authority authority = authorityRepository.findById(Contains.ROLE_ADMIN).get();
         user.setAuthorities(authority);
         User result = userRepository.save(user);
@@ -142,7 +143,7 @@ public class UserService {
         return true;
     }
 
-    public Page<UserDto> getUserByRole(String search,String role, Pageable pageable) {
+    public Page<User> getUserByRole(String search,String role, Pageable pageable) {
         Page<User> page = null;
         if(role != null){
             page = userRepository.getUserByRole(search,role, pageable);
@@ -150,16 +151,17 @@ public class UserService {
         else{
             page = userRepository.findAll(search,pageable);
         }
-        List<UserDto> list = userMapper.listUserToListUserDto(page.getContent());
-        Page<UserDto> result = commonPage.restPage(page, list);
-        return result;
+        return page;
     }
 
     public void changePass(String oldPass, String newPass) {
         User user = userUtils.getUserWithAuthority();
-        if(isValidPassword(newPass) == false){
-            throw new MessageException("Mật khẩu phải có ít nhất 1 chữ hoa, ký tự đặc biệt và chữ viết thường");
+        if (user.getUserType().equals(UserType.GOOGLE)) {
+            throw new MessageException("Xin lỗi, chức năng này không hỗ trợ đăng nhập bằng google");
         }
+//        if(isValidPassword(newPass) == false){
+//            throw new MessageException("Mật khẩu phải có ít nhất 1 chữ hoa, ký tự đặc biệt và chữ viết thường");
+//        }
         if(passwordEncoder.matches(oldPass, user.getPassword())){
             if(passwordEncoder.matches(newPass, user.getPassword())){
                 throw new MessageException("Mật khẩu mới không được trùng với mật khảu cũ");
@@ -220,7 +222,9 @@ public class UserService {
     public TokenDto loginWithGoogle(GoogleIdToken.Payload payload) {
         User user = new User();
         user.setEmail(payload.getEmail());
+        user.setUsername(payload.getEmail());
         user.setFullname(payload.get("name").toString());
+        user.setAvatar(payload.get("picture").toString());
         user.setActived(true);
         user.setAuthorities(authorityRepository.findByName(Contains.ROLE_USER));
         user.setCreatedDate(new Date(System.currentTimeMillis()));

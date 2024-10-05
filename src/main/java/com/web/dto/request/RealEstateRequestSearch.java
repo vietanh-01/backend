@@ -23,4 +23,8 @@ public class RealEstateRequestSearch {
     private Long provinceId;
 
     private List<Long> districtsId = new ArrayList<>();
+
+    private String projectName;
+
+    private Boolean accuracy;
 }

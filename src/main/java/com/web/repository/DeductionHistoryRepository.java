@@ -16,6 +16,6 @@ public interface DeductionHistoryRepository extends JpaRepository<DeductionHisto
     @Query("select d from DeductionHistory d where d.user.id=  ?1")
     public List<DeductionHistory> findByUser(Long userId);
 
-    @Query("select d from DeductionHistory d where d.createdDate >= ?1 and d.createdDate <= ?2")
-    public Page<DeductionHistory> findByDate(Date from , Date to, Pageable pageable);
+    @Query("select d from DeductionHistory d where d.createdDate >= ?1 and d.createdDate <= ?2 and (d.user.email like ?3 or d.user.username like ?3)")
+    public Page<DeductionHistory> findByDate(Date from , Date to,String search, Pageable pageable);
 }

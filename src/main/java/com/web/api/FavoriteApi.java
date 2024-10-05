@@ -41,4 +41,10 @@ public class FavoriteApi {
         favoriteService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/all/check-favorite")
+    public ResponseEntity<?> checkFavorite(@RequestParam("id") Long id){
+        Boolean result = favoriteService.checkFavorite(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

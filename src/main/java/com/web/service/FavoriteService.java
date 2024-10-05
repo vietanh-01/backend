@@ -26,7 +26,8 @@ public class FavoriteService {
         User user = userUtils.getUserWithAuthority();
         Optional<Favorite> fa = favoriteRepository.findByUserAndBds(user.getId(), bdsId);
         if(fa.isPresent()){
-            return "Tin bất động sản đã được thêm";
+            favoriteRepository.deleteById(fa.get().getId());
+            return "Đã xóa tin yêu thích";
         }
         Favorite favorite = new Favorite();
         favorite.setUser(user);
@@ -48,5 +49,13 @@ public class FavoriteService {
             throw new MessageException("Không đủ quyền");
         }
         favoriteRepository.deleteById(id);
+    }
+
+    public Boolean checkFavorite(Long id) {
+        Optional<Favorite> favorite = favoriteRepository.findByUserAndBds(userUtils.getUserWithAuthority().getId(), id);
+        if (favorite.isPresent()){
+            return true;
+        }
+        return false;
     }
 }

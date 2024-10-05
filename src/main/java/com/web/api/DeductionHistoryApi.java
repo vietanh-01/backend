@@ -27,9 +27,10 @@ public class DeductionHistoryApi {
     }
 
     @GetMapping("/admin/all-DeductionHistory")
-    public Page<DeductionHistory> findAll(@RequestParam(value = "from", required = false)Date from,
-                                          @RequestParam(value = "to", required = false)Date to, Pageable pageable){
-        return deductionHistoryService.findAll(from, to, pageable);
+    public Page<DeductionHistory> findAll(@RequestParam(value = "start", required = false) Date from,
+                                          @RequestParam(value = "end", required = false) Date to,
+                                          @RequestParam(value = "search", required = false) String search, Pageable pageable){
+        return deductionHistoryService.findAll(from, to, pageable, search);
     }
 
     @GetMapping("/admin/find-DeductionHistory-by-user")

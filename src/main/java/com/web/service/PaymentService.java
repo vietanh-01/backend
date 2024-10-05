@@ -8,6 +8,7 @@ import com.web.dto.response.ResponsePayment;
 import com.web.entity.HistoryPay;
 import com.web.entity.User;
 import com.web.enums.PayStatus;
+import com.web.enums.PayType;
 import com.web.models.PaymentResponse;
 import com.web.models.QueryStatusTransactionResponse;
 import com.web.processor.CreateOrderMoMo;
@@ -70,6 +71,7 @@ public class PaymentService {
             historyPay.setOrderId(orderId);
             historyPay.setRequestId(requestId);
             historyPay.setUser(user);
+            historyPay.setPayType(PayType.MOMO);
             historyPay.setTotalAmount(Double.valueOf(amount));
             historyPayRepository.save(historyPay);
             return PayStatus.NAP_TIEN_THANH_CONG;

@@ -32,10 +32,11 @@ public class RealEstateSearch {
 
     private String description;
 
-//    @Field(type = FieldType.Date, format = DateFormat.basic_date_time)
-
     @Field(type = FieldType.Date)
     private java.util.Date createdDate;
+
+    @Field(type = FieldType.Date)
+    private java.util.Date expiredDate;
 
     private Time createdTime;
 

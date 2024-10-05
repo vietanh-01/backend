@@ -25,23 +25,23 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String username = "admin";
+        String username = "admin@gmail.com";
         String password = "admin";
         String email = "admin@gmail.com";
 
         // Kiểm tra xem tài khoản đã tồn tại chưa
-        if (!userRepository.findByUsername(username).isPresent()) {
-            User user = new User();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setUserType(UserType.EMAIL);
-            user.setActived(true);
-            user.setCreatedDate(new Date(System.currentTimeMillis()));
-            user.setFullname("ADMIN");
-            user.setAuthorities(authorityRepository.findByName(Contains.ROLE_ADMIN));
-            // Nếu cần mã hóa mật khẩu, bạn có thể làm ở đây
-            userRepository.save(user);
-        }
+//        if (!userRepository.findByUsername(username).isPresent()) {
+//            User user = new User();
+//            user.setUsername(username);
+//            user.setEmail(email);
+//            user.setPassword(passwordEncoder.encode(password));
+//            user.setUserType(UserType.EMAIL);
+//            user.setActived(true);
+//            user.setCreatedDate(new Date(System.currentTimeMillis()));
+//            user.setFullname("ADMIN");
+//            user.setAuthorities(authorityRepository.findByName(Contains.ROLE_ADMIN));
+//            // Nếu cần mã hóa mật khẩu, bạn có thể làm ở đây
+//            userRepository.save(user);
+//        }
     }
 }

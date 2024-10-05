@@ -4,6 +4,8 @@ import com.web.entity.HistoryPay;
 import com.web.repository.HistoryPayRepository;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,12 +23,15 @@ public class HistoryPayService {
     @Autowired
     UserUtils userUtils;
 
-    public List<HistoryPay> findbyAdmin(Date start, Date end){
+    public Page<HistoryPay> findbyAdmin(Date start, Date end, Pageable pageable,String search){
         if(start == null || end == null){
             start = Date.valueOf("2000-01-01");
             end = Date.valueOf("2100-01-01");
         }
-        return historyPayRepository.findByAdmin(start, end);
+        if(search == null){
+            search = "";
+        }
+        return historyPayRepository.findByAdmin(start, end,"%"+search+"%", pageable);
     }
 
     public List<HistoryPay> findByUserId(Long userId){

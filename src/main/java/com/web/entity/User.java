@@ -47,6 +47,8 @@ public class User{
 
     private Double amount;
 
+    private String avatar;
+
     @ManyToOne
     @JoinColumn(name = "authority_name")
     private Authority authorities;

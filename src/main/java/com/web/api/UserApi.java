@@ -107,8 +107,11 @@ public class UserApi {
     public ResponseEntity<?> getUserByRole(@RequestParam(value = "role", required = false) String role,
                                            @RequestParam(value = "q", required = false) String search,
                                            Pageable pageable){
-        Page<UserDto> userDtos = userService.getUserByRole("%"+search+"%",role,pageable);
-        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+        if(search == null){
+            search = "";
+        }
+        Page<User> result = userService.getUserByRole("%"+search+"%",role,pageable);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/admin/check-role-admin")
@@ -155,5 +158,20 @@ public class UserApi {
                                            @RequestParam String password) throws URISyntaxException {
         userService.xacNhanDatLaiMatKhau(email, password, key);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/user/user-logged")
+    public ResponseEntity<?> inforLogged()  {
+        return new ResponseEntity<>(userUtils.getUserWithAuthority(),HttpStatus.OK);
+    }
+
+    @PostMapping("/all/update-infor")
+    public User updateInfor(@RequestBody User user){
+        User u = userUtils.getUserWithAuthority();
+        u.setFullname(user.getFullname());
+        u.setPhone(user.getPhone());
+        u.setAvatar(user.getAvatar());
+        userRepository.save(u);
+        return u;
     }
 }

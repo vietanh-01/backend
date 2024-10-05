@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Status {
+public enum PayType {
 
-    VI_PHAM, DANG_HIEN_THI
+    MOMO, VNPAY
 }

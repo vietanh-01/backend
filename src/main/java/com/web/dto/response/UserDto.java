@@ -26,6 +26,8 @@ public class UserDto {
 
     private String phone;
 
+    private String avatar;
+
     private Authority authorities;
 }
 

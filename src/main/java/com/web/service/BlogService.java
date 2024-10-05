@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
@@ -68,5 +69,11 @@ public class BlogService {
         blog.get().setNumView(blog.get().getNumView() + 1);
         blogRepository.save(blog.get());
         return blogMapper.blogToResponse(blog.get());
+    }
+
+    public List<BlogResponse> bestView() {
+        List<Blog> blog = blogRepository.bestView();
+        List<BlogResponse> result = blog.stream().map(b-> blogMapper.blogToResponse(b)).collect(Collectors.toList()); ;
+        return result;
     }
 }

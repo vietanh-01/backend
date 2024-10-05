@@ -1,5 +1,6 @@
 package com.web.entity;
 
+import com.web.enums.PayType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,9 @@ public class HistoryPay {
     private Date createdDate;
 
     private Time createdTime;
+
+    @Enumerated(EnumType.STRING)
+    private PayType payType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -1,5 +1,6 @@
 package com.web.chat;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -14,12 +15,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    String url = "http://localhost:3000";
+    @Value("${url.frontend}")
+    String urlFrontend;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/hello")
-                .setAllowedOrigins(url)
+                .setAllowedOrigins(urlFrontend)
+                .withSockJS();
+
+        registry.addEndpoint("/notification-admin")
+                .setAllowedOrigins(urlFrontend)
                 .withSockJS();
     }
 

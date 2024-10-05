@@ -39,6 +39,16 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select u from User u where u.authorities.name = ?1")
     List<User> getUserByRole(String role);
 
+    @Query("select count(u.id) from User u where u.authorities.name = ?1")
+    Long countUserByRole(String role);
+
     @Query("select u from User u where u.email like ?1 or u.fullname like ?1 or u.username like ?1")
     Set<User> searchByParam(String s);
+
+
+    @Query(value = "SELECT *\n" +
+            "FROM users u\n" +
+            "JOIN chat c ON (c.sender = u.id OR c.receiver = u.id)\n" +
+            "WHERE (?1 IN (c.sender, c.receiver)) AND u.id != ?1 and u.email like ?2", nativeQuery = true)
+    public Set<User> getAllUserChat(Long myUserId, String param);
 }

@@ -2,9 +2,12 @@ package com.web.api;
 
 import com.web.entity.Report;
 import com.web.repository.ReportRepository;
+import com.web.service.NotificationService;
 import com.web.service.ReportService;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ public class ReportApi {
     @Autowired
     ReportService reportService;
 
+
     @PostMapping("/public/add")
     public ResponseEntity<?> save(@RequestBody Report report){
         Report result = reportService.save(report);
@@ -35,4 +39,9 @@ public class ReportApi {
         return list;
     }
 
+    @GetMapping("/admin/all")
+    public Page<Report> allReport(Pageable pageable, @RequestParam(required = false) Date start, @RequestParam(required = false) Date end){
+        Page<Report> result = reportService.findAll(pageable, start, end);
+        return result;
+    }
 }

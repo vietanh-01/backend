@@ -24,6 +24,8 @@ public class RealEstateResponse {
 
     private Date createdDate;
 
+    private Date expiredDate;
+
     private Time createdTime;
 
     private String image;

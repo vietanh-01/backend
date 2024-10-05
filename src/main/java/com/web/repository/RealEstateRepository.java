@@ -24,10 +24,13 @@ public interface RealEstateRepository extends JpaRepository<RealEstate,Long> {
     public List<RealEstate> findByDateAndStatus(Date from, Date to, Status status);
 
     @Query("select r from RealEstate r where r.user.id = ?1")
-    public List<RealEstate> findByUser(Long userId);
+    public Page<RealEstate> findByUser(Long userId, Pageable pageable);
 
     @Query("select r from RealEstate r where r.user.id = ?1 and r.status = ?2")
-    public List<RealEstate> findByUserAndStatus(Long userId, Status status);
+    public Page<RealEstate> findByUserAndStatus(Long userId, Status status, Pageable pageable);
+
+    @Query("select r from RealEstate r where r.status = ?1")
+    public Page<RealEstate> findByStatus(Status status, Pageable pageable);
 
     @Query("select count(r) from RealEstate r where r.createdDate = ?1")
     public Long soBaiDanghomNay(Date date);
@@ -45,5 +48,9 @@ public interface RealEstateRepository extends JpaRepository<RealEstate,Long> {
     @Query("select r from RealEstate r where r.status = ?1 order by r.id desc ")
     public Page<RealEstate> dsbdsTrangChu(Status status ,Pageable pageable);
 
+    @Query("select r from RealEstate r where (r.price / r.acreage) >= ?1 and (r.price / r.acreage) <= ?2 and r.status = ?3 ")
+    List<RealEstate> calSamePrice(Double min, Double max, Status status, Long id);
 
+    @Query("select count(r.id) from RealEstate r where r.status = ?1")
+    Long countViPham(Status status);
 }

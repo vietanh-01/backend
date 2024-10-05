@@ -18,5 +18,7 @@ public class UserRequest {
 
     private String phone;
 
+    private String avatar;
+
     private String tokenFcm;
 }

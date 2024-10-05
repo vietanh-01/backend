@@ -28,6 +28,8 @@ public class RealEstate {
 
     private Time createdTime;
 
+    private Date expiredDate;
+
     private String image;
 
     private Double price;
@@ -37,6 +39,7 @@ public class RealEstate {
     private Boolean accuracy = false;
 
     @Column(name = "real_estate_status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne

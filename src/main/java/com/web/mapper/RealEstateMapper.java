@@ -38,6 +38,7 @@ public class RealEstateMapper {
     public RealEstateSearch responseToSearch(RealEstateResponse realEstateResponse){
         RealEstateSearch search = mapper.map(realEstateResponse, RealEstateSearch.class);
         search.setCreatedDate(new Date(realEstateResponse.getCreatedDate().getTime()));
+        search.setExpiredDate(new Date(realEstateResponse.getExpiredDate().getTime()));
         for(RealEstateImage r : search.getRealEstateImages()){
             r.setRealEstate(null);
         }

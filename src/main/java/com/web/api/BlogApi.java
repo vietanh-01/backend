@@ -47,4 +47,11 @@ public class BlogApi {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
+    @GetMapping("/public/best-view")
+    public ResponseEntity<?> bestView(){
+        List<BlogResponse> result = blogService.bestView();
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
 }
