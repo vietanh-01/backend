@@ -2,6 +2,7 @@ package com.web.service;
 
 import com.web.dto.response.CategoryDto;
 import com.web.entity.Category;
+import com.web.exception.MessageException;
 import com.web.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,9 +32,10 @@ public class CategoryService {
             categoryRepository.deleteById(categoryId);
         }
         catch (Exception e){
-            Category category = categoryRepository.findById(categoryId).get();
-            category.setDeleted(true);
-            categoryRepository.save(category);
+            throw new MessageException("Danh mục đã có bất động sản, không thể xóa");
+//            Category category = categoryRepository.findById(categoryId).get();
+//            category.setDeleted(true);
+//            categoryRepository.save(category);
         }
     }
 

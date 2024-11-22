@@ -20,7 +20,7 @@ public class GoogleOAuth2Service {
         try {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jsonFactory)
-                    .setAudience(Collections.singletonList("663646080535-l004tgn5o5cpspqdglrl3ckgjr3u8nbf.apps.googleusercontent.com"))
+                    .setAudience(Collections.singletonList("480686365968-vd7kfmp8pe6oqussr5gku2am5alicv7s.apps.googleusercontent.com"))
                     .build();
             System.out.println(verifier);
             GoogleIdToken idToken = verifier.verify(idTokenString);

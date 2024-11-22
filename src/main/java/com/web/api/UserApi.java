@@ -147,18 +147,19 @@ public class UserApi {
                 .body(result);
     }
 
-    @PostMapping("/public/quen-mat-khau")
+    @PostMapping("/public/init-forgotpasss")
     public ResponseEntity<?> quenMatKhau(@RequestParam String email) throws URISyntaxException {
         userService.guiYeuCauQuenMatKhau(email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/public/dat-lai-mat-khau")
+    @PostMapping("/public/finish-reset-pass")
     public ResponseEntity<?> datLaiMatKhau(@RequestParam String email, @RequestParam String key,
                                            @RequestParam String password) throws URISyntaxException {
         userService.xacNhanDatLaiMatKhau(email, password, key);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @PostMapping("/user/user-logged")
     public ResponseEntity<?> inforLogged()  {

@@ -94,21 +94,22 @@ public class RealEstateService {
 
     public RealEstateResponse saveOrUpdate(RealEstateRequest request){
         User user = userUtils.getUserWithAuthority();
-//        if(request.getId() == null){
         if(user.getAmount() == null){
             throw new MessageException("Không đủ số dư");
         }
         if(user.getAmount() < payCost){
             throw new MessageException("Không đủ số dư");
         }
-//        }
+
         RealEstate realEstate = realEstateMapper.requestToEntity(request);
         Juridical juridical = juridicalRepository.findById(request.getJuridical().getId()).get();
         Wards wards = wardsRepository.findById(request.getWards().getId()).get();
 
         realEstate.setJuridical(juridical);
         realEstate.setWards(wards);
+
         List<RealEstateImage> realEstateImagesEx = new ArrayList<>();
+
         if(realEstate.getId() != null){
             RealEstate re = realEstateRepository.findById(realEstate.getId()).get();
             if(re.getUser().getId() != user.getId() && !user.getAuthorities().getName().equals(Contains.ROLE_ADMIN)){
@@ -145,6 +146,7 @@ public class RealEstateService {
             realEstateImageRepository.save(image);
             realEstateImages.add(image);
         }
+        realEstateImages.addAll(realEstateImagesEx);
         result.setRealEstateImages(realEstateImages);
 
 
@@ -176,12 +178,11 @@ public class RealEstateService {
         }
         deductionHistoryRepository.save(deductionHistory);
 
+        System.out.println("size be: "+result.getRealEstateImages().size());
         RealEstateResponse response = realEstateMapper.entityToResponse(result);
+        response.setRealEstateImages(result.getRealEstateImages());
         System.out.println("size img: "+realEstateImagesEx.size());
-        for(RealEstateImage r : realEstateImagesEx){
-            response.getRealEstateImages().add(r);
-        }
-//        response.getRealEstateImages().addAll(realEstateImagesEx);
+        System.out.println("list img response: "+response.getRealEstateImages().size());
         RealEstateSearch realEstateSearch = realEstateMapper.responseToSearch(response);
         realEstateSearchRepository.save(realEstateSearch);
 
@@ -191,10 +192,14 @@ public class RealEstateService {
         else{
             notificationService.save("Tin đăng "+response.getId()+" đã được cập nhật",urlRealEstate,"Có tin đăng được cập nhật");
         }
-        for(RealEstateImage rm : realEstateImagesEx){
+        for(RealEstateImage rm : realEstateImages){
             rm.setRealEstate(result);
         }
-        realEstateImageRepository.saveAll(realEstateImagesEx);
+        for(RealEstateCategory rm : realEstateCategories){
+            rm.setRealEstate(result);
+        }
+        realEstateImageRepository.saveAll(realEstateImages);
+        realEstateCategoryRepository.saveAll(realEstateCategories);
         return response;
     }
 

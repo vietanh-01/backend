@@ -9,5 +9,6 @@ import lombok.Getter;
 public enum UserType {
     GOOGLE,
     EMAIL,
+
 }
 
